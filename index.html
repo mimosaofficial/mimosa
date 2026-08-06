@@ -2130,6 +2130,7 @@
   assignProductNumbers();
 
   // 브랜드 상품 → 신상품 자동 렌더링
+  const NEW_ARRIVALS_COUNT = 8; // 신상품 섹션에 보여줄 개수 (그리드가 4열이므로 4의 배수 추천)
   function renderNewArrivals() {
     const grid = document.getElementById('new-arrivals-grid');
     if (!grid) return;
@@ -2159,7 +2160,7 @@
 
     // 브랜드 상품 먼저 (최신 순)
     allBrandProducts.forEach(({ brand, product: p }) => {
-      if (shown >= 4) return;
+      if (shown >= NEW_ARRIVALS_COUNT) return;
       const thumb = (p.imgs && p.imgs.length) ? p.imgs[0] : (p.img || '');
       const card = document.createElement('div');
       card.className = 'product-card';
@@ -2186,7 +2187,7 @@
 
     // 남은 자리 기존 카드로 채우기
     existingCards.forEach(card => {
-      if (shown >= 4) return;
+      if (shown >= NEW_ARRIVALS_COUNT) return;
       grid.appendChild(card);
       shown++;
     });
