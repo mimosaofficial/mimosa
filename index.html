@@ -30,7 +30,7 @@
   }
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@400;500;600&family=Josefin+Sans:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Serif+KR:wght@300;400;500;600&family=Josefin+Sans:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 
 <!-- ============================================ -->
 <!-- 🧹 좀비 서비스워커 자동 청소 코드 (임시)         -->
@@ -241,6 +241,17 @@
     letter-spacing: 0.02em;
   }
   .section-title em { font-style: italic; }
+  /* 한글 섹션 타이틀 — 품격있는 세리프 스타일 */
+  .section-title-kr {
+    font-family: 'Noto Serif KR', var(--font-display), serif;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+  }
+  .section-title-kr em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--c-black);
+  }
   .section-link {
     font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--c-warm); text-decoration: none; border-bottom: 0.5px solid var(--c-stone);
@@ -747,14 +758,14 @@
 
 <!-- POPULAR -->
 <div id="popular" class="section-head">
-  <h2 class="section-title">Popular <em>Items</em></h2>
+  <h2 class="section-title section-title-kr">인기 <em>상품</em></h2>
   <a href="#" class="section-link" onclick="showCategoryPage('ALL'); return false;">전체 보기</a>
 </div>
 <div class="products-grid" id="popular-grid"></div>
 
 <!-- NEW ARRIVALS -->
 <div id="new" class="section-head">
-  <h2 class="section-title">New <em>Arrivals</em></h2>
+  <h2 class="section-title section-title-kr"><em>신상품</em></h2>
   <a href="#" class="section-link" onclick="showCategoryPage('ALL'); return false;">전체 보기</a>
 </div>
 <div class="products-grid" id="new-arrivals-grid">
