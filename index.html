@@ -1037,6 +1037,7 @@
       let totalLoaded = 0;
       let addedFromJson = 0;
       let updatedFromJson = 0;
+      let removedByJson = 0; // 🆕 products.json에서 사라진(관리자가 지운) 상품을 이 기기에서도 제거한 개수
       // 🔧 이전에는 Object.keys(brandProducts)만 순회해서, HTML에 미리 정의된
       // 브랜드 키(17개)에 없는 "브랜드명 지갑" 같은 키(예: '고야드 지갑')는
       // products.json에 있어도 통째로 무시되던 버그가 있었음.
@@ -1072,6 +1073,18 @@
               updatedFromJson++;
             }
           });
+
+          // 🆕🗑️ 삭제 동기화: products.json에 더 이상 없는 상품은 이 기기의
+          // localStorage/화면 목록에서도 제거합니다.
+          // (예전엔 "추가/수정"만 반영하고 "삭제"는 절대 반영되지 않아서,
+          //  A 컴퓨터에서 상품을 지우고 배포해도 B 컴퓨터에서는 옛 상품이
+          //  계속 살아있다가, B가 다시 저장하면 그 옛 상품이 products.json에
+          //  다시 부활해버리는 심각한 버그가 있었음.
+          //  → products.json을 "정답"으로 간주하고, 여기 없는 항목은 삭제.)
+          const jsonKeySet = new Set(data[brand].map(p => p.id || p.name));
+          const beforeCount = brandProducts[brand].length;
+          brandProducts[brand] = brandProducts[brand].filter(p => jsonKeySet.has(p.id || p.name));
+          removedByJson += (beforeCount - brandProducts[brand].length);
         }
       });
       if (addedFromJson > 0) {
@@ -1079,8 +1092,14 @@
       }
       if (updatedFromJson > 0) {
         console.log(`[MIMOSA] products.json 기준으로 기존 상품 ${updatedFromJson}개 정보 갱신 (배지/가격 등)`);
-        // 갱신된 내용을 이 기기의 localStorage에도 반영해서, 다음 로드 시
-        // (JSON fetch 실패 등의 상황에서도) 최신 상태가 유지되도록 합니다.
+      }
+      if (removedByJson > 0) {
+        console.log(`[MIMOSA] products.json에서 삭제된 상품 ${removedByJson}개를 이 기기에서도 제거`);
+      }
+      if (addedFromJson > 0 || updatedFromJson > 0 || removedByJson > 0) {
+        // 추가/수정/삭제 중 하나라도 있었다면, 이 기기의 localStorage에도
+        // 반영해서 다음 로드 시(JSON fetch 실패 등의 상황에서도) 최신 상태가
+        // 유지되도록 합니다.
         try { if (typeof saveProductsToStorage === 'function') saveProductsToStorage(); } catch (_) {}
       }
       // 🆔 ID 없는 상품에 고유 ID 부여 (같은 이름 상품 구분용)
